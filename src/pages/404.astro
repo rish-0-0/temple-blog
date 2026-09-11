@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Page not found — Divya Katha">
+  <section class="lost">
+    <h1>This path leads nowhere</h1>
+    <p>The page you're looking for isn't here.</p>
+    <p><a href="/">← all temple tales</a></p>
+  </section>
+</Base>
+
+<style>
+  .lost {
+    text-align: center;
+    max-width: 34rem;
+    margin: 4rem auto;
+    padding: 0 1.5rem;
+  }
+  .lost h1 {
+    font-family: var(--font-title);
+    font-weight: 400;
+    font-size: 2.4rem;
+    margin: 0 0 1rem;
+  }
+  .lost p { color: var(--ink-soft); }
+  .lost a {
+    font-family: var(--font-head);
+    color: var(--link);
+    text-decoration: none;
+  }
+  .lost a:hover { text-decoration: underline; }
+</style>

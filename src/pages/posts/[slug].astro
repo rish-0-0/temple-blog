@@ -1,0 +1,281 @@
+---
+import { marked } from 'marked';
+import Base from '../../layouts/Base.astro';
+import Marigold from '../../components/Marigold.astro';
+import { getTemplePosts, type TemplePost } from '../../lib/strapi';
+
+export async function getStaticPaths() {
+  const posts = await getTemplePosts();
+  return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+
+interface Props { post: TemplePost }
+const { post } = Astro.props;
+
+const bodyHtml = post.body ? marked.parse(post.body) : '';
+const galleryImages = [...post.post_images]
+  .filter((pi) => pi.image)
+  .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+
+const fmtDate = new Date(post.publishedAt).toLocaleDateString('en-IN', {
+  day: 'numeric', month: 'long', year: 'numeric',
+});
+---
+<Base
+  title={post.seo?.meta_title ?? post.title}
+  description={post.seo?.meta_description ?? undefined}
+  ogImage={post.seo?.og_image?.url ?? post.cover_image?.url ?? undefined}
+>
+  <article>
+    <header class="post-header">
+      <p class="post-place">{post.temple_name} · {post.city}, {post.state}</p>
+      <h1 class="post-title">{post.title}</h1>
+      <p class="post-meta">
+        {fmtDate}
+        {post.author && <> · by {post.author.display_name}</>}
+      </p>
+    </header>
+
+    {post.cover_image && (
+      <figure class="hero">
+        <img
+          src={post.cover_image.formats?.large?.url ?? post.cover_image.url}
+          alt={post.cover_image.alternativeText ?? post.temple_name}
+          width={post.cover_image.width}
+          height={post.cover_image.height}
+        />
+        {post.cover_image.caption && <figcaption>{post.cover_image.caption}</figcaption>}
+      </figure>
+    )}
+
+    <div class="prose" set:html={bodyHtml} />
+
+    {galleryImages.length > 0 && (
+      <section class="gallery">
+        <div class="gallery-ornament">
+          <span class="orn-line"></span>
+          <Marigold size={24} class="orn-flower" />
+          <span class="orn-line"></span>
+        </div>
+        <h2 class="gallery-title">Glimpses</h2>
+        {galleryImages.map((pi) => (
+          <figure class="gallery-item">
+            <img
+              src={pi.image!.formats?.large?.url ?? pi.image!.url}
+              alt={pi.image!.alternativeText ?? pi.caption ?? post.temple_name}
+              loading="lazy"
+              width={pi.image!.width}
+              height={pi.image!.height}
+            />
+            {pi.caption && <figcaption>{pi.caption}</figcaption>}
+          </figure>
+        ))}
+      </section>
+    )}
+
+    {post.tags.length > 0 && (
+      <ul class="tags">
+        {post.tags.map((tag) => <li>{tag.name}</li>)}
+      </ul>
+    )}
+
+    {post.author?.bio && (
+      <aside class="author">
+        <p class="author-name">{post.author.display_name}</p>
+        <p class="author-bio">{post.author.bio}</p>
+      </aside>
+    )}
+
+    <p class="back"><a href="/">← all temple tales</a></p>
+  </article>
+</Base>
+
+<style>
+  article {
+    position: relative;
+    z-index: 1;
+    max-width: 42rem;
+    margin: 0 auto;
+    padding: 0 1.5rem 3rem;
+  }
+
+  .post-header {
+    text-align: center;
+    margin: 2.5rem 0 2.75rem;
+  }
+  .post-place {
+    font-family: var(--font-head);
+    font-size: 0.8rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--marigold-deep);
+    margin: 0 0 1rem;
+  }
+  .post-title {
+    font-family: var(--font-title);
+    font-weight: 400;
+    font-size: clamp(2.1rem, 5.5vw, 3rem);
+    line-height: 1.45;
+    margin: 0 0 1.1rem;
+    color: var(--ink);
+  }
+  .post-meta {
+    font-size: 0.92rem;
+    color: var(--ink-faint);
+    margin: 0;
+  }
+
+  .hero { margin: 0 0 3rem; }
+  .hero img,
+  .gallery-item img {
+    border-radius: 12px;
+    display: block;
+    box-shadow: 0 12px 40px rgba(97, 74, 38, 0.16);
+  }
+  figcaption {
+    text-align: center;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--ink-faint);
+    margin-top: 0.8rem;
+    line-height: 1.6;
+  }
+
+  /* ---------- article body ---------- */
+  .prose :global(p) { margin: 0 0 1.5rem; }
+  .prose :global(p:first-of-type)::first-letter {
+    font-family: var(--font-title);
+    font-size: 3.1em;
+    line-height: 0.9;
+    color: var(--marigold-deep);
+    float: left;
+    padding: 0.08em 0.12em 0 0;
+  }
+  .prose :global(h2) {
+    font-family: var(--font-head);
+    font-weight: 400;
+    font-size: 1.55rem;
+    line-height: 1.5;
+    color: var(--ink);
+    margin: 3rem 0 1.1rem;
+  }
+  .prose :global(h2)::before {
+    content: '❁';
+    color: var(--marigold);
+    font-size: 0.75em;
+    margin-right: 0.6em;
+  }
+  .prose :global(h3) {
+    font-family: var(--font-head);
+    font-weight: 400;
+    font-size: 1.25rem;
+    margin: 2.2rem 0 0.9rem;
+  }
+  .prose :global(strong) { color: #55432c; }
+  .prose :global(em) { color: var(--ink-soft); }
+  .prose :global(a) {
+    color: var(--link);
+    text-decoration: underline;
+    text-decoration-color: rgba(162, 90, 42, 0.35);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.2s;
+  }
+  .prose :global(a:hover) { text-decoration-color: var(--link); }
+  .prose :global(blockquote) {
+    margin: 2rem 0;
+    padding: 0.2rem 0 0.2rem 1.4rem;
+    border-left: 3px solid var(--marigold);
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+  .prose :global(ol),
+  .prose :global(ul) { padding-left: 1.4rem; margin: 0 0 1.5rem; }
+  .prose :global(li) { margin-bottom: 0.5rem; }
+  .prose :global(img) {
+    border-radius: 12px;
+    box-shadow: 0 12px 40px rgba(97, 74, 38, 0.16);
+    margin: 2rem 0;
+  }
+  .prose :global(hr) {
+    border: none;
+    border-top: 1px solid var(--hairline);
+    margin: 3rem auto;
+    width: 60%;
+  }
+
+  /* ---------- gallery ---------- */
+  .gallery { margin-top: 3.5rem; }
+  .gallery-ornament {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1.4rem;
+  }
+  .orn-line { width: 64px; height: 1px; background: var(--hairline); }
+  .orn-flower { opacity: 0.6; }
+  .gallery-title {
+    font-family: var(--font-head);
+    font-weight: 400;
+    font-size: 1.4rem;
+    text-align: center;
+    margin: 0 0 2rem;
+  }
+  .gallery-item { margin: 0 0 2.5rem; }
+
+  /* ---------- tags / author / back ---------- */
+  .tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 0;
+    margin: 3rem 0 0;
+  }
+  .tags li {
+    font-family: var(--font-head);
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    background: var(--paper-deep);
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    padding: 0.3rem 0.95rem;
+  }
+
+  .author {
+    margin: 3rem auto 0;
+    max-width: 30rem;
+    text-align: center;
+    border-top: 1px solid var(--hairline);
+    padding-top: 2rem;
+  }
+  .author-name {
+    font-family: var(--font-head);
+    font-size: 1rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--marigold-deep);
+    margin: 0 0 0.5rem;
+  }
+  .author-bio {
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .back {
+    text-align: center;
+    margin-top: 3rem;
+  }
+  .back a {
+    font-family: var(--font-head);
+    font-size: 0.9rem;
+    letter-spacing: 0.08em;
+    color: var(--link);
+    text-decoration: none;
+  }
+  .back a:hover { text-decoration: underline; }
+</style>

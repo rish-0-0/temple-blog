@@ -1,0 +1,163 @@
+---
+import Marigold from '../components/Marigold.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+}
+const { title, description, ogImage } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta property="og:type" content="article" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Marcellus&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="corner corner-tl"><Marigold size={150} /></div>
+    <div class="corner corner-br"><Marigold size={190} /></div>
+
+    <header class="site-header">
+      <a href="/" class="site-name">Divya Katha</a>
+      <p class="site-tagline">quiet stories from the temples of India</p>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-ornament">
+        <span class="footer-line"></span>
+        <Marigold size={26} class="footer-flower" />
+        <span class="footer-line"></span>
+      </div>
+      <p>Divya Katha · temple tales, told gently</p>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --paper: #fbf7ee;
+    --paper-deep: #f3ecdc;
+    --ink: #3c332a;
+    --ink-soft: #7c6f5e;
+    --ink-faint: #a2957f;
+    --hairline: #e5dbc5;
+    --marigold: #e39f2f;
+    --marigold-deep: #c97f1c;
+    --marigold-light: #f2b84b;
+    --marigold-core: #8a5314;
+    --link: #a25a2a;
+    --font-title: 'Kaushan Script', cursive;
+    --font-head: 'Marcellus', serif;
+    --font-body: 'Source Serif 4', Georgia, serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  html {
+    background: var(--paper);
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    line-height: 1.85;
+    /* faint warm wash toward the top, like morning light on stone */
+    background:
+      radial-gradient(1200px 500px at 50% -100px, rgba(227, 159, 47, 0.07), transparent 70%),
+      var(--paper);
+  }
+
+  main { flex: 1; width: 100%; }
+
+  ::selection { background: rgba(227, 159, 47, 0.3); }
+
+  /* --- corner marigolds, deliberately faint --- */
+  .corner {
+    position: fixed;
+    z-index: 0;
+    opacity: 0.13;
+    pointer-events: none;
+  }
+  .corner-tl { top: -48px; left: -48px; transform: rotate(-12deg); }
+  .corner-br { bottom: -62px; right: -62px; transform: rotate(14deg); }
+  @media (max-width: 640px) {
+    .corner { opacity: 0.09; }
+    .corner-tl { transform: rotate(-12deg) scale(0.65); transform-origin: top left; }
+    .corner-br { transform: rotate(14deg) scale(0.65); transform-origin: bottom right; }
+  }
+
+  /* --- header --- */
+  .site-header {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 3.5rem 1.5rem 0.5rem;
+  }
+  .site-name {
+    font-family: var(--font-title);
+    font-size: 2rem;
+    color: var(--marigold-deep);
+    text-decoration: none;
+  }
+  .site-name:hover { color: var(--marigold); }
+  .site-tagline {
+    margin: 0.35rem 0 0;
+    font-family: var(--font-head);
+    font-size: 0.85rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  /* --- footer --- */
+  .site-footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 3rem 1.5rem 3.5rem;
+    color: var(--ink-faint);
+    font-family: var(--font-head);
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+  }
+  .footer-ornament {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .footer-line {
+    display: inline-block;
+    width: 72px;
+    height: 1px;
+    background: var(--hairline);
+  }
+  .footer-flower { opacity: 0.55; }
+
+  img { max-width: 100%; height: auto; }
+</style>

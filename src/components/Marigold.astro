@@ -1,0 +1,51 @@
+---
+// A layered marigold bloom, drawn once and reused for corner ornaments & dividers.
+const { size = 120, class: className = '' } = Astro.props;
+---
+<svg
+  class={className}
+  width={size}
+  height={size}
+  viewBox="-50 -50 100 100"
+  fill="none"
+  aria-hidden="true"
+>
+  <!-- outer ruffled ring -->
+  <g fill="var(--marigold-deep)">
+    {Array.from({ length: 16 }).map((_, i) => (
+      <ellipse
+        cx="0"
+        cy="-36"
+        rx="10"
+        ry="15"
+        transform={`rotate(${i * 22.5})`}
+      />
+    ))}
+  </g>
+  <!-- middle ring -->
+  <g fill="var(--marigold)">
+    {Array.from({ length: 12 }).map((_, i) => (
+      <ellipse
+        cx="0"
+        cy="-25"
+        rx="9.5"
+        ry="13"
+        transform={`rotate(${i * 30 + 15})`}
+      />
+    ))}
+  </g>
+  <!-- inner ring -->
+  <g fill="var(--marigold-light)">
+    {Array.from({ length: 9 }).map((_, i) => (
+      <ellipse
+        cx="0"
+        cy="-14"
+        rx="8"
+        ry="11"
+        transform={`rotate(${i * 40 + 10})`}
+      />
+    ))}
+  </g>
+  <circle r="7.5" fill="var(--marigold-deep)" />
+  <circle r="4" fill="var(--marigold-core)" />
+</svg>

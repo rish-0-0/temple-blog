@@ -11,6 +11,9 @@ importers:
       astro:
         specifier: ^6.3.6
         version: 6.3.6(rollup@4.60.4)
+      marked:
+        specifier: ^18.0.12
+        version: 18.0.12
 
 packages:
 
@@ -889,6 +892,11 @@ packages:
 
   markdown-table@3.0.4:
     resolution: {integrity: sha512-wiYz4+JrLyb/DqW2hkFJxP7Vd7JuTDm77fvbM8VfEQdmSMqcImWeeRbHwZjBjIFki/VaMK2BhFi7oUUZeM5bqw==}
+
+  marked@18.0.12:
+    resolution: {integrity: sha512-LEm4ga2YeI2T3GVHj9b0BaDPPk93LLTHMFeMyQbNIzPxc8vCI0y/scy0ZA6z6lXKyT9j9Nhl/OC6ZYKYGuFScA==}
+    engines: {node: '>= 20'}
+    hasBin: true
 
   mdast-util-definitions@6.0.0:
     resolution: {integrity: sha512-scTllyX6pnYNZH/AIp/0ePz6s4cZtARxImwoPJ7kS42n+MnVsI4XbnG6d4ibehRIldYMWM2LD7ImQblVhUejVQ==}
@@ -2259,6 +2267,8 @@ snapshots:
       source-map-js: 1.2.1
 
   markdown-table@3.0.4: {}
+
+  marked@18.0.12: {}
 
   mdast-util-definitions@6.0.0:
     dependencies:

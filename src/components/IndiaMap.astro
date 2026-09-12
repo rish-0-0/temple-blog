@@ -1,0 +1,218 @@
+---
+import { INDIA_PATH, MAP_WIDTH, MAP_HEIGHT, project } from '../lib/india-map';
+import type { TemplePost } from '../lib/strapi';
+
+interface Props {
+  posts: TemplePost[];
+  /** slug -> short description */
+  descriptions: Record<string, string>;
+}
+const { posts, descriptions } = Astro.props;
+
+const markers = posts
+  .filter((p) => p.latitude != null && p.longitude != null)
+  .map((p) => {
+    const { x, y } = project(p.latitude, p.longitude);
+    return { post: p, x, y, xPct: (x / MAP_WIDTH) * 100, yPct: (y / MAP_HEIGHT) * 100 };
+  });
+---
+<div class="map-wrap" id="temple-map">
+  <svg
+    viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`}
+    role="img"
+    aria-label="Map of India showing temples with stories on this site"
+  >
+    <defs>
+      <linearGradient id="india-fill" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#f6efdd" />
+        <stop offset="100%" stop-color="#efe5cd" />
+      </linearGradient>
+    </defs>
+    <path class="india" d={INDIA_PATH} />
+    {markers.map((m, i) => (
+      <g
+        class="marker"
+        data-marker={i}
+        transform={`translate(${m.x.toFixed(1)} ${m.y.toFixed(1)})`}
+        tabindex="0"
+        role="button"
+        aria-label={`${m.post.temple_name}, ${m.post.state}`}
+      >
+        <circle class="marker-halo" r="11" />
+        <circle class="marker-dot" r="5" />
+      </g>
+    ))}
+  </svg>
+
+  {markers.map((m, i) => (
+    <div
+      class="map-card"
+      data-card={i}
+      hidden
+      style={`--mx: ${m.xPct.toFixed(2)}%; --my: ${m.yPct.toFixed(2)}%;`}
+    >
+      <button class="map-card-close" aria-label="Close">×</button>
+      <p class="map-card-place">{m.post.temple_name} · {m.post.state}</p>
+      <p class="map-card-title">{m.post.title}</p>
+      {descriptions[m.post.slug] && <p class="map-card-desc">{descriptions[m.post.slug]}</p>}
+      <a class="map-card-link" href={`/posts/${m.post.slug}/`}>read the story →</a>
+    </div>
+  ))}
+</div>
+
+<script>
+  const wrap = document.getElementById('temple-map')!;
+  const cards = wrap.querySelectorAll<HTMLElement>('[data-card]');
+
+  const closeAll = () => cards.forEach((c) => (c.hidden = true));
+
+  const open = (i: string) => {
+    const card = wrap.querySelector<HTMLElement>(`[data-card="${i}"]`)!;
+    const wasOpen = !card.hidden;
+    closeAll();
+    if (wasOpen) return;
+    card.hidden = false;
+    // keep the card inside the map horizontally
+    card.classList.remove('edge-left', 'edge-right');
+    const mx = parseFloat(card.style.getPropertyValue('--mx'));
+    if (mx < 25) card.classList.add('edge-left');
+    else if (mx > 75) card.classList.add('edge-right');
+  };
+
+  wrap.querySelectorAll<HTMLElement>('[data-marker]').forEach((marker) => {
+    marker.addEventListener('click', (e) => {
+      e.stopPropagation();
+      open(marker.dataset.marker!);
+    });
+    marker.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        open(marker.dataset.marker!);
+      }
+    });
+  });
+
+  wrap.querySelectorAll('.map-card-close').forEach((btn) =>
+    btn.addEventListener('click', closeAll),
+  );
+  document.addEventListener('click', (e) => {
+    if (!wrap.contains(e.target as Node)) closeAll();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeAll();
+  });
+</script>
+
+<style>
+  .map-wrap {
+    position: relative;
+    max-width: 34rem;
+    margin: 0 auto;
+  }
+  .map-wrap svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .india {
+    fill: url(#india-fill);
+    stroke: #d8b877;
+    stroke-width: 1.2;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 14px 30px rgba(97, 74, 38, 0.16));
+  }
+
+  .marker {
+    cursor: pointer;
+    outline: none;
+  }
+  .marker-dot {
+    fill: var(--marigold-deep);
+    stroke: #fffdf8;
+    stroke-width: 1.6;
+    transition: fill 0.2s ease;
+  }
+  .marker-halo {
+    fill: rgba(227, 159, 47, 0.28);
+    transform-origin: center;
+    transform-box: fill-box;
+    animation: halo-pulse 2.6s ease-in-out infinite;
+  }
+  .marker:hover .marker-dot,
+  .marker:focus-visible .marker-dot {
+    fill: var(--marigold);
+  }
+  .marker:focus-visible .marker-halo {
+    fill: rgba(227, 159, 47, 0.45);
+  }
+  @keyframes halo-pulse {
+    0%, 100% { transform: scale(0.65); opacity: 0.9; }
+    50% { transform: scale(1); opacity: 0.45; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marker-halo { animation: none; }
+  }
+
+  .map-card {
+    position: absolute;
+    left: var(--mx);
+    top: var(--my);
+    transform: translate(-50%, 14px);
+    z-index: 2;
+    width: min(17rem, 78vw);
+    background: #fffdf8;
+    border: 1px solid var(--hairline);
+    border-radius: 12px;
+    box-shadow: 0 14px 40px rgba(97, 74, 38, 0.2);
+    padding: 1rem 1.2rem 1.1rem;
+    text-align: left;
+    line-height: 1.6;
+  }
+  .map-card.edge-left { transform: translate(-12%, 14px); }
+  .map-card.edge-right { transform: translate(-88%, 14px); }
+
+  .map-card-close {
+    position: absolute;
+    top: 0.35rem;
+    right: 0.55rem;
+    border: none;
+    background: none;
+    font-size: 1.15rem;
+    line-height: 1;
+    color: var(--ink-faint);
+    cursor: pointer;
+    padding: 0.25rem;
+  }
+  .map-card-close:hover { color: var(--ink); }
+
+  .map-card-place {
+    font-family: var(--font-head);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--marigold-deep);
+    margin: 0 0 0.35rem;
+    padding-right: 1.2rem;
+  }
+  .map-card-title {
+    font-family: var(--font-head);
+    font-size: 1.02rem;
+    color: var(--ink);
+    margin: 0 0 0.4rem;
+  }
+  .map-card-desc {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    margin: 0 0 0.6rem;
+  }
+  .map-card-link {
+    font-family: var(--font-head);
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    color: var(--link);
+    text-decoration: none;
+  }
+  .map-card-link:hover { text-decoration: underline; }
+</style>

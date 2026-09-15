@@ -1,5 +1,6 @@
 ---
 import Marigold from '../components/Marigold.astro';
+import CookieNotice from '../components/CookieNotice.astro';
 
 interface Props {
   title: string;
@@ -7,6 +8,7 @@ interface Props {
   ogImage?: string;
 }
 const { title, description, ogImage } = Astro.props;
+const year = new Date().getFullYear();
 ---
 <!doctype html>
 <html lang="en">
@@ -55,8 +57,22 @@ const { title, description, ogImage } = Astro.props;
         <Marigold size={26} class="footer-flower" />
         <span class="footer-line"></span>
       </div>
-      <p>Divya Katha · temple tales, told gently</p>
+      <p class="footer-text">DivyaKatha · temple tales, told gently</p>
+      <p class="footer-text">
+        <a href="/about/">About</a>
+        <span aria-hidden="true"> · </span>
+        <a href="/contact/">Contact</a>
+        <span aria-hidden="true"> · </span>
+        <a href="/privacy-policy/">Privacy</a>
+        <span aria-hidden="true"> · </span>
+        <a href="/cookies/">Cookies</a>
+        <span aria-hidden="true"> · </span>
+        <a href="/terms/">Terms</a>
+      </p>
+      <p class="footer-text footer-copy">© {year} DivyaKatha · Rishabh Anand</p>
     </footer>
+
+    <CookieNotice />
   </body>
 </html>
 
@@ -167,6 +183,175 @@ const { title, description, ogImage } = Astro.props;
     background: var(--hairline);
   }
   .footer-flower { opacity: 0.55; }
+
+  .footer-text {
+    margin: 0 0 0.6rem;
+  }
+
+  .footer-text a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .footer-text a:hover {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .footer-copy {
+    margin-bottom: 0;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+  }
+
+  /* --- shared article / prose (posts + static pages) --- */
+  article {
+    position: relative;
+    z-index: 1;
+    max-width: 42rem;
+    margin: 0 auto;
+    padding: 0 1.5rem 3rem;
+  }
+
+  .post-header {
+    text-align: center;
+    margin: 2.5rem 0 2.75rem;
+  }
+
+  .post-title {
+    font-family: var(--font-title);
+    font-weight: 400;
+    font-size: clamp(2.1rem, 5.5vw, 3rem);
+    line-height: 1.45;
+    margin: 0 0 1.1rem;
+    color: var(--ink);
+  }
+
+  .post-meta {
+    font-size: 0.92rem;
+    color: var(--ink-faint);
+    margin: 0;
+  }
+
+  .prose p { margin: 0 0 1.5rem; }
+
+  .prose p:first-of-type::first-letter {
+    font-family: var(--font-title);
+    font-size: 3.1em;
+    line-height: 0.9;
+    color: var(--marigold-deep);
+    float: left;
+    padding: 0.08em 0.12em 0 0;
+  }
+
+  .prose--plain p:first-of-type::first-letter {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    color: inherit;
+    float: none;
+    padding: 0;
+  }
+
+  .prose h2 {
+    font-family: var(--font-head);
+    font-weight: 400;
+    font-size: 1.55rem;
+    line-height: 1.5;
+    color: var(--ink);
+    margin: 3rem 0 1.1rem;
+  }
+
+  .prose h2::before {
+    content: '❁';
+    color: var(--marigold);
+    font-size: 0.75em;
+    margin-right: 0.6em;
+  }
+
+  .prose h3 {
+    font-family: var(--font-head);
+    font-weight: 400;
+    font-size: 1.25rem;
+    margin: 2.2rem 0 0.9rem;
+  }
+
+  .prose strong { color: #55432c; }
+  .prose em { color: var(--ink-soft); }
+
+  .prose a {
+    color: var(--link);
+    text-decoration: underline;
+    text-decoration-color: rgba(162, 90, 42, 0.35);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.2s;
+  }
+
+  .prose a:hover { text-decoration-color: var(--link); }
+
+  .prose blockquote {
+    margin: 2rem 0;
+    padding: 0.2rem 0 0.2rem 1.4rem;
+    border-left: 3px solid var(--marigold);
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+
+  .prose ol,
+  .prose ul { padding-left: 1.4rem; margin: 0 0 1.5rem; }
+  .prose li { margin-bottom: 0.5rem; }
+
+  .prose img {
+    border-radius: 12px;
+    box-shadow: 0 12px 40px rgba(97, 74, 38, 0.16);
+    margin: 2rem 0;
+  }
+
+  .prose hr {
+    border: none;
+    border-top: 1px solid var(--hairline);
+    margin: 3rem auto;
+    width: 60%;
+  }
+
+  .author {
+    margin: 3rem auto 0;
+    max-width: 30rem;
+    text-align: center;
+    border-top: 1px solid var(--hairline);
+    padding-top: 2rem;
+  }
+
+  .author-name {
+    font-family: var(--font-head);
+    font-size: 1rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--marigold-deep);
+    margin: 0 0 0.5rem;
+  }
+
+  .author-bio {
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .back {
+    text-align: center;
+    margin-top: 3rem;
+  }
+
+  .back a {
+    font-family: var(--font-head);
+    font-size: 0.9rem;
+    letter-spacing: 0.08em;
+    color: var(--link);
+    text-decoration: none;
+  }
+
+  .back a:hover { text-decoration: underline; }
 
   img { max-width: 100%; height: auto; }
 </style>

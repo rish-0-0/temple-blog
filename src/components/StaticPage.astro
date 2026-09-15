@@ -1,0 +1,18 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description } = Astro.props;
+---
+
+<article>
+  <header class="post-header">
+    <h1 class="post-title">{title}</h1>
+    {description && <p class="post-meta">{description}</p>}
+  </header>
+  <div class="prose prose--plain">
+    <slot />
+  </div>
+  <p class="back"><a href="/">← all temple tales</a></p>
+</article>

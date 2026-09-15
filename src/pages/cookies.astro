@@ -1,0 +1,83 @@
+---
+import Base from '../layouts/Base.astro';
+import StaticPage from '../components/StaticPage.astro';
+
+const updated = '15 September 2026';
+---
+
+<Base
+  title="Cookie Policy — DivyaKatha"
+  description="How DivyaKatha uses cookies, including Google Analytics, and how you can control them."
+>
+  <StaticPage
+    title="Cookie Policy"
+    description="What cookies this site uses and how to manage them in your browser."
+  >
+    <p class="post-meta">Last updated: {updated}</p>
+
+    <p>
+      This page explains how <strong>DivyaKatha</strong> uses cookies and similar technologies.
+      For broader privacy practices, see our <a href="/privacy-policy/">Privacy Policy</a>.
+    </p>
+
+    <h2>What are cookies?</h2>
+    <p>
+      Cookies are small text files stored on your device when you visit a website. They help sites
+      remember preferences, keep sessions secure, or understand how pages are used.
+    </p>
+
+    <h2>Cookies we use</h2>
+
+    <h3>Essential cookies</h3>
+    <p>
+      These are needed for basic site operation. They may include a cookie that remembers you dismissed
+      our cookie notice. Without them, some convenience features may not work as expected.
+    </p>
+
+    <h3>Analytics cookies (Google Analytics)</h3>
+    <p>
+      We use Google Analytics (measurement ID <strong>G-S7DXESED8M</strong>) to collect aggregated
+      statistics about visits — such as which pages are read, how long visitors stay, and general
+      device/location information. Google may set cookies like <code>_ga</code> and <code>_ga_*</code>
+      to distinguish users and sessions.
+    </p>
+    <p>
+      Analytics helps us improve DivyaKatha. We do not use analytics data to build advertising profiles
+      on this site today.
+    </p>
+
+    <h2>Future advertising cookies</h2>
+    <p>
+      If we add advertising (for example, Google AdSense) later, additional cookies may be used to
+      serve and measure ads. We will update this page before enabling such features.
+    </p>
+
+    <h2>How to control cookies</h2>
+    <ul>
+      <li>
+        <strong>Browser settings</strong> — most browsers let you block or delete cookies. Look for
+        "Privacy" or "Cookies" in your browser preferences.
+      </li>
+      <li>
+        <strong>Google Analytics opt-out</strong> — install
+        <a href="https://tools.google.com/dlpage/gaoptout" rel="noopener noreferrer" target="_blank">Google's Analytics Opt-out Browser Add-on</a>
+        to prevent Analytics from collecting data about your visits.
+      </li>
+      <li>
+        <strong>Do Not Track</strong> — some browsers send a DNT signal. We do not currently change
+        behaviour based on DNT alone, but you can still limit cookies through your browser.
+      </li>
+    </ul>
+    <p>
+      Blocking analytics cookies will not stop you from reading the site, but we will have less
+      insight into how stories are enjoyed.
+    </p>
+
+    <h2>Contact</h2>
+    <p>
+      Questions about cookies? Email
+      <a href="mailto:admin@rishabh-anand.com">admin@rishabh-anand.com</a>
+      or visit our <a href="/contact/">contact page</a>.
+    </p>
+  </StaticPage>
+</Base>

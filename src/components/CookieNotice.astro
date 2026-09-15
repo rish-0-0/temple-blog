@@ -1,0 +1,104 @@
+---
+---
+
+<div id="cookie-notice" class="cookie-notice" hidden role="status" aria-live="polite">
+  <p>
+    We use cookies for analytics tracking on DivyaKatha.
+    <a href="/cookies/">Cookies</a>
+    ·
+    <a href="/privacy-policy/">Privacy</a>
+  </p>
+  <button type="button" id="cookie-notice-dismiss" aria-label="Close cookie notice">
+    <span aria-hidden="true">×</span>
+  </button>
+</div>
+
+<script>
+  const STORAGE_KEY = 'divyakatha-cookie-notice-dismissed';
+
+  function initCookieNotice() {
+    const notice = document.getElementById('cookie-notice');
+    const dismiss = document.getElementById('cookie-notice-dismiss');
+    if (!notice || !dismiss) return;
+
+    try {
+      if (localStorage.getItem(STORAGE_KEY) === '1') return;
+    } catch {
+      /* localStorage unavailable — show notice anyway */
+    }
+
+    notice.hidden = false;
+
+    dismiss.addEventListener('click', () => {
+      notice.hidden = true;
+      try {
+        localStorage.setItem(STORAGE_KEY, '1');
+      } catch {
+        /* ignore */
+      }
+    });
+  }
+
+  initCookieNotice();
+</script>
+
+<style>
+  .cookie-notice {
+    position: fixed;
+    z-index: 50;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    max-width: min(34rem, calc(100vw - 2rem));
+    padding: 0.7rem 0.85rem 0.7rem 1rem;
+    background: var(--paper);
+    border: 1px solid var(--hairline);
+    border-radius: 12px;
+    box-shadow: 0 8px 28px rgba(97, 74, 38, 0.1);
+    font-family: var(--font-head);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    line-height: 1.55;
+    color: var(--ink-faint);
+  }
+
+  .cookie-notice p {
+    margin: 0;
+    flex: 1;
+  }
+
+  .cookie-notice a {
+    color: var(--link);
+    text-decoration: none;
+  }
+
+  .cookie-notice a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .cookie-notice button {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+    font-size: 1.1rem;
+    line-height: 1;
+    color: var(--ink-faint);
+    background: transparent;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .cookie-notice button:hover {
+    color: var(--ink);
+  }
+</style>

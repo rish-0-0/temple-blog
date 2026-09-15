@@ -16,10 +16,12 @@ import StaticPage from '../components/StaticPage.astro';
       please email:
     </p>
 
-    <p class="contact-card">
-      <strong>Rishabh Anand</strong><br />
-      <a href="mailto:admin@rishabh-anand.com">admin@rishabh-anand.com</a>
-    </p>
+    <aside class="author">
+      <p class="author-name">Rishabh Anand</p>
+      <p class="author-bio">
+        <a href="mailto:admin@rishabh-anand.com">admin@rishabh-anand.com</a>
+      </p>
+    </aside>
 
     <p>
       We aim to reply within a few working days. Please include the page URL if your message relates
@@ -32,22 +34,3 @@ import StaticPage from '../components/StaticPage.astro';
     </p>
   </StaticPage>
 </Base>
-
-<style>
-  .contact-card {
-    text-align: center;
-    background: #fffdf8;
-    border: 1px solid var(--hairline);
-    border-radius: 14px;
-    padding: 1.5rem 1.25rem;
-    margin: 1.5rem 0 2rem;
-    font-size: 1.05rem;
-    line-height: 1.7;
-  }
-
-  .contact-card a {
-    font-family: var(--font-head);
-    font-size: 1.1rem;
-    letter-spacing: 0.04em;
-  }
-</style>

@@ -6,104 +6,13 @@ interface Props {
 const { title, description } = Astro.props;
 ---
 
-<article class="static-page">
-  <header class="page-header">
-    <h1 class="page-title">{title}</h1>
-    {description && <p class="page-lead">{description}</p>}
+<article>
+  <header class="post-header">
+    <h1 class="post-title">{title}</h1>
+    {description && <p class="post-meta">{description}</p>}
   </header>
-  <div class="prose">
+  <div class="prose prose--plain">
     <slot />
   </div>
+  <p class="back"><a href="/">← all temple tales</a></p>
 </article>
-
-<style>
-  .static-page {
-    position: relative;
-    z-index: 1;
-    max-width: 42rem;
-    margin: 0 auto;
-    padding: 0 1.5rem 3rem;
-  }
-
-  .page-header {
-    text-align: center;
-    margin: 2.5rem 0 2.75rem;
-  }
-
-  .page-title {
-    font-family: var(--font-title);
-    font-weight: 400;
-    font-size: clamp(2rem, 5vw, 2.75rem);
-    line-height: 1.45;
-    margin: 0 0 0.75rem;
-    color: var(--ink);
-  }
-
-  .page-lead {
-    font-size: 1.02rem;
-    color: var(--ink-soft);
-    margin: 0;
-    max-width: 32rem;
-    margin-inline: auto;
-  }
-
-  .prose :global(p) {
-    margin: 0 0 1.25rem;
-  }
-
-  .prose :global(h2) {
-    font-family: var(--font-head);
-    font-weight: 400;
-    font-size: 1.35rem;
-    line-height: 1.5;
-    color: var(--ink);
-    margin: 2.25rem 0 0.85rem;
-  }
-
-  .prose :global(h3) {
-    font-family: var(--font-head);
-    font-weight: 400;
-    font-size: 1.1rem;
-    margin: 1.75rem 0 0.65rem;
-  }
-
-  .prose :global(ul),
-  .prose :global(ol) {
-    padding-left: 1.4rem;
-    margin: 0 0 1.25rem;
-  }
-
-  .prose :global(li) {
-    margin-bottom: 0.45rem;
-  }
-
-  .prose :global(a) {
-    color: var(--link);
-    text-decoration: underline;
-    text-decoration-color: rgba(162, 90, 42, 0.35);
-    text-underline-offset: 3px;
-    transition: text-decoration-color 0.2s;
-  }
-
-  .prose :global(a:hover) {
-    text-decoration-color: var(--link);
-  }
-
-  .prose :global(strong) {
-    color: #55432c;
-  }
-
-  .prose :global(hr) {
-    border: none;
-    border-top: 1px solid var(--hairline);
-    margin: 2.5rem auto;
-    width: 60%;
-  }
-
-  .prose :global(.updated) {
-    font-size: 0.88rem;
-    color: var(--ink-faint);
-    font-style: italic;
-    margin-bottom: 2rem;
-  }
-</style>

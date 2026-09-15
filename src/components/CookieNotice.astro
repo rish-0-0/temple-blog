@@ -51,16 +51,18 @@
     transform: translateX(-50%);
     display: flex;
     align-items: center;
-    gap: 1rem;
-    max-width: min(36rem, calc(100vw - 2rem));
-    padding: 0.85rem 1rem 0.85rem 1.15rem;
-    background: #fffdf8;
+    gap: 0.75rem;
+    max-width: min(34rem, calc(100vw - 2rem));
+    padding: 0.7rem 0.85rem 0.7rem 1rem;
+    background: var(--paper);
     border: 1px solid var(--hairline);
     border-radius: 12px;
-    box-shadow: 0 8px 28px rgba(97, 74, 38, 0.12);
-    font-size: 0.88rem;
-    line-height: 1.5;
-    color: var(--ink-soft);
+    box-shadow: 0 8px 28px rgba(97, 74, 38, 0.1);
+    font-family: var(--font-head);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    line-height: 1.55;
+    color: var(--ink-faint);
   }
 
   .cookie-notice p {
@@ -70,13 +72,12 @@
 
   .cookie-notice a {
     color: var(--link);
-    text-decoration: underline;
-    text-decoration-color: rgba(162, 90, 42, 0.35);
-    text-underline-offset: 2px;
+    text-decoration: none;
   }
 
   .cookie-notice a:hover {
-    text-decoration-color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   .cookie-notice button {
@@ -84,28 +85,20 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 1.75rem;
-    height: 1.75rem;
+    width: 1.5rem;
+    height: 1.5rem;
     padding: 0;
-    font-family: var(--font-head);
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     line-height: 1;
     color: var(--ink-faint);
     background: transparent;
     border: none;
     border-radius: 999px;
     cursor: pointer;
-    transition: color 0.2s, background 0.2s;
+    transition: color 0.2s;
   }
 
   .cookie-notice button:hover {
     color: var(--ink);
-    background: var(--paper-deep);
-  }
-
-  @media (max-width: 520px) {
-    .cookie-notice {
-      text-align: center;
-    }
   }
 </style>

@@ -1,0 +1,12 @@
+{
+  "name": "Temple Blog",
+  "install": ".cursor/scripts/cloud-agent-install.sh",
+  "start": ".cursor/scripts/cloud-agent-start.sh",
+  "terminals": [
+    {
+      "name": "dev",
+      "command": "pnpm dev --host"
+    }
+  ],
+  "ports": [4321]
+}

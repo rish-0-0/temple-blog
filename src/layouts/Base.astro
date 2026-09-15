@@ -1,5 +1,6 @@
 ---
 import Marigold from '../components/Marigold.astro';
+import CookieNotice from '../components/CookieNotice.astro';
 
 interface Props {
   title: string;
@@ -7,6 +8,7 @@ interface Props {
   ogImage?: string;
 }
 const { title, description, ogImage } = Astro.props;
+const year = new Date().getFullYear();
 ---
 <!doctype html>
 <html lang="en">
@@ -55,8 +57,22 @@ const { title, description, ogImage } = Astro.props;
         <Marigold size={26} class="footer-flower" />
         <span class="footer-line"></span>
       </div>
-      <p>Divya Katha · temple tales, told gently</p>
+      <p class="footer-tagline">DivyaKatha · temple tales, told gently</p>
+      <nav class="footer-nav" aria-label="Site links">
+        <a href="/about/">About</a>
+        <span class="footer-dot" aria-hidden="true">·</span>
+        <a href="/contact/">Contact</a>
+        <span class="footer-dot" aria-hidden="true">·</span>
+        <a href="/privacy-policy/">Privacy</a>
+        <span class="footer-dot" aria-hidden="true">·</span>
+        <a href="/cookies/">Cookies</a>
+        <span class="footer-dot" aria-hidden="true">·</span>
+        <a href="/terms/">Terms</a>
+      </nav>
+      <p class="footer-copy">© {year} DivyaKatha · Rishabh Anand</p>
     </footer>
+
+    <CookieNotice />
   </body>
 </html>
 
@@ -167,6 +183,43 @@ const { title, description, ogImage } = Astro.props;
     background: var(--hairline);
   }
   .footer-flower { opacity: 0.55; }
+
+  .footer-tagline {
+    margin: 0 0 0.85rem;
+  }
+
+  .footer-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem 0.5rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .footer-nav a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-nav a:hover {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .footer-dot {
+    color: var(--hairline);
+    user-select: none;
+  }
+
+  .footer-copy {
+    margin: 0;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+  }
 
   img { max-width: 100%; height: auto; }
 </style>

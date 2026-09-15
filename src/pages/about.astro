@@ -1,0 +1,43 @@
+---
+import Base from '../layouts/Base.astro';
+import StaticPage from '../components/StaticPage.astro';
+---
+
+<Base
+  title="About — DivyaKatha"
+  description="DivyaKatha is a quiet blog of temple tales and Hindu folklore from across India."
+>
+  <StaticPage
+    title="About DivyaKatha"
+    description="Temple tales, told gently."
+  >
+    <p>
+      <strong>DivyaKatha</strong> (दिव्य कथा — "divine stories") is a small, story-first blog about the
+      temples of India: the folklore woven into stone, the legends passed between generations, and the
+      quiet reasons people still return to sacred places.
+    </p>
+
+    <p>
+      Posts explore history, myth, and lived devotion — always as thoughtful storytelling, not as
+      official religious doctrine or travel advice. If a tale varies by region or tradition, we try to
+      say so.
+    </p>
+
+    <h2>Who runs this site?</h2>
+    <p>
+      DivyaKatha is written and maintained by <strong>Rishabh Anand</strong>. Stories are researched
+      and composed with care; corrections and suggestions are welcome.
+    </p>
+
+    <h2>How content is published</h2>
+    <p>
+      Articles are managed through a Strapi CMS and published on this Astro site. Images and text may
+      be loaded from our content backend when you read a post.
+    </p>
+
+    <p>
+      Have a question, correction, or story tip?
+      <a href="/contact/">Get in touch</a>.
+    </p>
+  </StaticPage>
+</Base>

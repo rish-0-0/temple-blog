@@ -1,15 +1,15 @@
 ---
 ---
 
-<div id="cookie-notice" class="cookie-notice" hidden>
+<div id="cookie-notice" class="cookie-notice" hidden role="status" aria-live="polite">
   <p>
-    We use essential cookies and Google Analytics to understand how visitors use DivyaKatha.
-    <a href="/cookies/">Learn more</a>
+    We use cookies for analytics tracking on DivyaKatha.
+    <a href="/cookies/">Cookies</a>
     ·
     <a href="/privacy-policy/">Privacy</a>
   </p>
-  <button type="button" id="cookie-notice-dismiss" aria-label="Dismiss cookie notice">
-    Got it
+  <button type="button" id="cookie-notice-dismiss" aria-label="Close cookie notice">
+    <span aria-hidden="true">×</span>
   </button>
 </div>
 
@@ -81,33 +81,31 @@
 
   .cookie-notice button {
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    padding: 0;
     font-family: var(--font-head);
-    font-size: 0.78rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink);
-    background: var(--paper-deep);
-    border: 1px solid var(--hairline);
+    font-size: 1.15rem;
+    line-height: 1;
+    color: var(--ink-faint);
+    background: transparent;
+    border: none;
     border-radius: 999px;
-    padding: 0.4rem 0.9rem;
     cursor: pointer;
-    transition: background 0.2s, border-color 0.2s;
+    transition: color 0.2s, background 0.2s;
   }
 
   .cookie-notice button:hover {
-    background: #fff;
-    border-color: var(--marigold);
+    color: var(--ink);
+    background: var(--paper-deep);
   }
 
   @media (max-width: 520px) {
     .cookie-notice {
-      flex-direction: column;
-      align-items: stretch;
       text-align: center;
-    }
-
-    .cookie-notice button {
-      align-self: center;
     }
   }
 </style>

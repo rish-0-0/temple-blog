@@ -8,5 +8,5 @@
       "command": "pnpm dev --host"
     }
   ],
-  "ports": [4321]
+  "ports": [{ "name": "dev", "port": 4321 }]
 }

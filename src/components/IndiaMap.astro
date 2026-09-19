@@ -63,8 +63,58 @@ const markers = posts
 <script>
   const wrap = document.getElementById('temple-map')!;
   const cards = wrap.querySelectorAll<HTMLElement>('[data-card]');
+  let openMarkerId: string | null = null;
 
-  const closeAll = () => cards.forEach((c) => (c.hidden = true));
+  const resetCardLayout = (card: HTMLElement) => {
+    card.classList.remove('is-floating');
+    card.style.position = '';
+    card.style.left = '';
+    card.style.top = '';
+    card.style.transform = '';
+    card.style.zIndex = '';
+  };
+
+  const layoutOpenCard = (card: HTMLElement, markerId: string) => {
+    const marker = wrap.querySelector<SVGGraphicsElement>(`[data-marker="${markerId}"]`);
+    if (!marker) return;
+    const mr = marker.getBoundingClientRect();
+    const mx = parseFloat(card.style.getPropertyValue('--mx'));
+    let shiftX = '-50%';
+    if (mx < 25) shiftX = '-12%';
+    else if (mx > 75) shiftX = '-88%';
+
+    card.classList.add('is-floating');
+    card.hidden = false;
+    card.style.visibility = 'hidden';
+    card.style.position = 'fixed';
+    card.style.left = `${mr.left + mr.width / 2}px`;
+    card.style.top = `${mr.bottom + 14}px`;
+    card.style.transform = `translate(${shiftX}, 0)`;
+    card.style.zIndex = '100';
+
+    const cr = card.getBoundingClientRect();
+    const margin = 12;
+    const vh = window.visualViewport?.height ?? window.innerHeight;
+    let top = mr.bottom + 14;
+    if (cr.bottom > vh - margin) {
+      top = Math.max(margin, mr.top - cr.height - 14);
+    }
+    card.style.top = `${top}px`;
+    card.style.visibility = '';
+  };
+
+  const syncPopoverLayer = () => {
+    document.body.classList.toggle('map-popover-open', openMarkerId !== null);
+  };
+
+  const closeAll = () => {
+    cards.forEach((c) => {
+      c.hidden = true;
+      resetCardLayout(c);
+    });
+    openMarkerId = null;
+    syncPopoverLayer();
+  };
 
   const open = (i: string) => {
     const card = wrap.querySelector<HTMLElement>(`[data-card="${i}"]`)!;
@@ -72,11 +122,19 @@ const markers = posts
     closeAll();
     if (wasOpen) return;
     card.hidden = false;
-    // keep the card inside the map horizontally
+    openMarkerId = i;
     card.classList.remove('edge-left', 'edge-right');
     const mx = parseFloat(card.style.getPropertyValue('--mx'));
     if (mx < 25) card.classList.add('edge-left');
     else if (mx > 75) card.classList.add('edge-right');
+    layoutOpenCard(card, i);
+    syncPopoverLayer();
+  };
+
+  const repositionOpenCard = () => {
+    if (openMarkerId === null) return;
+    const card = wrap.querySelector<HTMLElement>(`[data-card="${openMarkerId}"]`);
+    if (card && !card.hidden) layoutOpenCard(card, openMarkerId);
   };
 
   wrap.querySelectorAll<HTMLElement>('[data-marker]').forEach((marker) => {
@@ -93,14 +151,31 @@ const markers = posts
   });
 
   wrap.querySelectorAll('.map-card-close').forEach((btn) =>
-    btn.addEventListener('click', closeAll),
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeAll();
+    }),
   );
+
+  wrap.querySelectorAll('.map-card-link').forEach((link) =>
+    link.addEventListener('click', (e) => e.stopPropagation()),
+  );
+
   document.addEventListener('click', (e) => {
-    if (!wrap.contains(e.target as Node)) closeAll();
+    const t = e.target as Node;
+    if (wrap.contains(t)) return;
+    if (t instanceof Element && t.closest('.map-card')) return;
+    closeAll();
   });
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeAll();
   });
+  window.addEventListener('resize', repositionOpenCard);
+  window.addEventListener('scroll', repositionOpenCard, { passive: true });
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', repositionOpenCard);
+    window.visualViewport.addEventListener('scroll', repositionOpenCard);
+  }
 </script>
 
 <style>
@@ -169,6 +244,11 @@ const markers = posts
     padding: 1rem 1.2rem 1.1rem;
     text-align: left;
     line-height: 1.6;
+    pointer-events: auto;
+  }
+  .map-card.is-floating {
+    /* viewport-fixed while open — escapes low ancestor stacking contexts */
+    margin: 0;
   }
   .map-card.edge-left { transform: translate(-12%, 14px); }
   .map-card.edge-right { transform: translate(-88%, 14px); }
@@ -208,11 +288,29 @@ const markers = posts
     margin: 0 0 0.6rem;
   }
   .map-card-link {
+    display: inline-block;
+    position: relative;
+    z-index: 1;
+    padding: 0.4rem 0;
+    margin: -0.4rem 0;
     font-family: var(--font-head);
     font-size: 0.8rem;
     letter-spacing: 0.06em;
     color: var(--link);
     text-decoration: none;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
   .map-card-link:hover { text-decoration: underline; }
+</style>
+
+<style is:global>
+  /* Lift the whole map band above sibling sections (e.g. post cards) and the cookie bar */
+  body.map-popover-open .map-section {
+    position: relative;
+    z-index: 60;
+  }
+  body.map-popover-open .map-card.is-floating {
+    z-index: 100;
+  }
 </style>

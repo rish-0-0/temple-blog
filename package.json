@@ -12,9 +12,13 @@
     "astro": "astro"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["esbuild", "sharp"]
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp"
+    ]
   },
   "dependencies": {
+    "@astrojs/sitemap": "3.7.4",
     "astro": "^6.3.6",
     "marked": "^18.0.12"
   }

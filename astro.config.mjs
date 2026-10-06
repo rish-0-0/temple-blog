@@ -1,42 +1,24 @@
 // @ts-check
-import { existsSync, readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import { loadEnv } from 'vite';
 
 const SITE = 'https://temples.sibani-panigrahy.com';
+const root = fileURLToPath(new URL('.', import.meta.url));
 
 /**
  * Strapi credentials for post lastmod only. Page rendering still reads
- * import.meta.env; this mirrors that lookup so a rebuild picks up new posts
- * without a separate sitemap env var. Process environment wins over files.
+ * import.meta.env. loadEnv applies .env files for the build mode, then
+ * process.env wins. Missing credentials omit lastmod; they do not fail the build.
  * @returns {{ apiUrl?: string, token?: string }}
  */
 function strapiCredentials() {
-  /** @type {Record<string, string>} */
-  const fromFiles = {};
-  for (const file of ['.env', '.env.local', '.env.production', '.env.production.local']) {
-    const path = resolve(file);
-    if (!existsSync(path)) continue;
-    for (const rawLine of readFileSync(path, 'utf8').split('\n')) {
-      const line = rawLine.trim();
-      if (!line || line.startsWith('#')) continue;
-      const eq = line.indexOf('=');
-      if (eq === -1) continue;
-      const key = line.slice(0, eq).trim().replace(/^export\s+/, '');
-      let value = line.slice(eq + 1).trim();
-      if (
-        (value.startsWith('"') && value.endsWith('"')) ||
-        (value.startsWith("'") && value.endsWith("'"))
-      ) {
-        value = value.slice(1, -1);
-      }
-      fromFiles[key] = value;
-    }
-  }
+  const mode = process.env.NODE_ENV || 'production';
+  const env = loadEnv(mode, root, '');
   return {
-    apiUrl: process.env.STRAPI_API_URL || fromFiles.STRAPI_API_URL,
-    token: process.env.STRAPI_API_TOKEN || fromFiles.STRAPI_API_TOKEN,
+    apiUrl: env.STRAPI_API_URL,
+    token: env.STRAPI_API_TOKEN,
   };
 }
 

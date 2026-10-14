@@ -9,6 +9,8 @@ interface Props {
 }
 const { title, description, ogImage } = Astro.props;
 const year = new Date().getFullYear();
+// Absolute production origin, pathname only: trailing slash from config, no query string.
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 <!doctype html>
 <html lang="en">
@@ -25,9 +27,11 @@ const year = new Date().getFullYear();
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonicalURL.href} />
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
     <meta property="og:title" content={title} />
+    <meta property="og:url" content={canonicalURL.href} />
     {description && <meta property="og:description" content={description} />}
     {ogImage && <meta property="og:image" content={ogImage} />}
     <meta property="og:type" content="article" />

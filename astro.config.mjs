@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import { loadEnv } from 'vite';
+import { indexnowIntegration } from './scripts/indexnow.mjs';
 
 const SITE = 'https://temples.sibani-panigrahy.com';
 const root = fileURLToPath(new URL('.', import.meta.url));
@@ -98,5 +99,8 @@ export default defineConfig({
         return item;
       },
     }),
+    // Runs after sitemap writes dist/sitemap-*.xml. The submit itself is gated
+    // to the production Workers build inside the integration.
+    indexnowIntegration(),
   ],
 });
